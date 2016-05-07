@@ -1,26 +1,42 @@
 class App extends React.Component {
   constructor(props) {
     super(props);
+    
+    this.props.search({key: window.YOUTUBE_API_KEY, query: 'cat'}, function(data) {
+      this.setState({library: data.items});
+      // this is async and it doesn't work - FIX THIS LATER
+      this.setState({currentVideo: this.state.library[0]});
+      this.render();
+    }.bind(this));
+
     this.state = {
-      library: exampleVideoData,
+      library: [],
       currentVideo: exampleVideoData[0]
     };
   }
-
-  clickVideoHandler(a) {
-    console.log(this);
+  
+  clickVideoHandler(props) {
+    this.setState({
+      currentVideo: props.video	
+    });
   }
 
+  clickSearchHandler(props) {
+    var options = {part: 'snippet', key: window.YOUTUBE_API_KEY, q: props.q, maxResults: 5};
+    this.setState({
+      library: props.search(options)
+    });
+  }
 
   render () {
     return (
      <div>
-        <Nav />
+        <Nav onClick={this.clickSearchHandler.bind(this)}/>
         <div className="col-md-7">
           <VideoPlayer currentVideo={this.state.currentVideo}/>
         </div>
         <div className="col-md-5">
-          <VideoList onClick={this.clickVideoHandler} videos={this.state.library}/>
+          <VideoList onClick={this.clickVideoHandler.bind(this)} videos={this.state.library}/>
         </div>
       </div>
 		);
