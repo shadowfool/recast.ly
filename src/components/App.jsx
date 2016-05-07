@@ -21,17 +21,34 @@ class App extends React.Component {
     });
   }
 
-  clickSearchHandler(props) {
-    var options = {part: 'snippet', key: window.YOUTUBE_API_KEY, q: props.q, maxResults: 5};
+  // clickSearchHandler(props) {
+  //   var search = document.getElementsByTagName('input')[0].value;
+  //   var options = {part: 'snippet', key: window.YOUTUBE_API_KEY, query: search, maxResults: 5};
+  //   this.setState({
+  //     library: this.props.search(options, function(data) {
+  //     this.setState({library: data.items});
+  //     // this is async and it doesn't work - FIX THIS LATER
+  //     this.render();
+  //   }.bind(this))
+  //   });
+  // }
+
+  onKeySearchHandler(props){
+    var search = document.getElementsByTagName('input')[0].value;
+    var options = {part: 'snippet', key: window.YOUTUBE_API_KEY, query: search, maxResults: 5};
     this.setState({
-      library: props.search(options)
+      library: this.props.search(options, function(data) {
+      this.setState({library: data.items});
+      // this is async and it doesn't work - FIX THIS LATER
+      this.render();
+    }.bind(this))
     });
   }
 
   render () {
     return (
      <div>
-        <Nav onClick={this.clickSearchHandler.bind(this)}/>
+        <Nav onKeyPress={this.onKeySearchHandler.bind(this)}/>
         <div className="col-md-7">
           <VideoPlayer currentVideo={this.state.currentVideo}/>
         </div>
