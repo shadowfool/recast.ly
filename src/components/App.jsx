@@ -34,6 +34,7 @@ class App extends React.Component {
   // }
 
   onKeySearchHandler(props) {
+    // backspace isn't working
     var bouncer = _.debounce(function() {
       this.setState({
         library: this.props.search({part: 'snippet', key: window.YOUTUBE_API_KEY, query: document.getElementsByTagName('input')[0].value, maxResults: 5}, function(data) {
@@ -41,7 +42,7 @@ class App extends React.Component {
           this.render();
         }.bind(this))
       });
-    }.bind(this), 500);
+    }.bind(this), 2000);
     bouncer();
   }
 
