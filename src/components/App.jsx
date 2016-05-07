@@ -33,16 +33,16 @@ class App extends React.Component {
   //   });
   // }
 
-  onKeySearchHandler(props){
-    var search = document.getElementsByTagName('input')[0].value;
-    var options = {part: 'snippet', key: window.YOUTUBE_API_KEY, query: search, maxResults: 5};
-    this.setState({
-      library: this.props.search(options, function(data) {
-      this.setState({library: data.items});
-      // this is async and it doesn't work - FIX THIS LATER
-      this.render();
-    }.bind(this))
-    });
+  onKeySearchHandler(props) {
+    var bouncer = _.debounce(function() {
+      this.setState({
+        library: this.props.search({part: 'snippet', key: window.YOUTUBE_API_KEY, query: document.getElementsByTagName('input')[0].value, maxResults: 5}, function(data) {
+          this.setState({library: data.items});
+          this.render();
+        }.bind(this))
+      });
+    }.bind(this), 500);
+    bouncer();
   }
 
   render () {
